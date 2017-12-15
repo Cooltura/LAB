@@ -2,8 +2,8 @@
 #include <allegro5/allegro.h>
 #include "allegro5/allegro_image.h"
 const float FPS = 60;
-const int SCREEN_W = 640;
-const int SCREEN_H = 480;
+const int SCREEN_W = 1024;
+const int SCREEN_H = 768;
 const int BOUNCER_SIZE = 120;
 const float pi = 3.14;
 enum MYKEYS {
@@ -22,20 +22,15 @@ int main(int argc, char **argv)
 	ALLEGRO_BITMAP *car = NULL;
 	ALLEGRO_BITMAP *bouncer = NULL;
 	ALLEGRO_BITMAP *bouncer2 = NULL;
-	float car_x =180;
-	float car_y =180;
-	float bouncer_x = 200;
-	float bouncer_y = 60;
-	float bouncer_2x = 420;
-	float bouncer_2y = 60;
-	bool key[4] = { false, false, false, false };
+	float car_x = 512, car_y = 384;
+	float bouncer_x = 380, bouncer_y = 200;
+	float bouncer_2x = 630, bouncer_2y = 200;
+    bool key[4] = { false, false, false, false };
 	bool redraw = true;
 	bool doexit = false;
 	int x = 1;
-	float k = 0;
-	float k2 = pi/2;
-	float k3 = 0;
-
+	int y = 0;
+	float k = 0, k2 = pi / 2, k3 = 0, k4 = 0, k5 = 0;
 	if (!al_init()) {
 		fprintf(stderr, "failed to initialize allegro!\n");
 		return -1;
@@ -148,91 +143,174 @@ int main(int argc, char **argv)
 		if (ev.type == ALLEGRO_EVENT_TIMER) {
 			if (x == 1)
 			{
-				if (key[KEY_UP] && bouncer_y >= 180) {
-					bouncer_y -= BOUNCER_SIZE;
-					bouncer_2y -= BOUNCER_SIZE;
-				}
-				if (key[KEY_DOWN] && bouncer_y <= 180) {
-					bouncer_y += BOUNCER_SIZE;
-					bouncer_2y += BOUNCER_SIZE;
-				}
-			}
-			else {
-				if (k >= 6.28)
-				{
-					k = 0;
-					k2 = pi / 2;
-					k3 = 0;
-				}
-				if (k <= -6.28)
-				{
-					k = 0;
-					k2 = pi / 2;
-					k3 = 0;
-				}
-				if ((k>=1.56 && k<=1.6) || (k>3.13 && k<3.15) || (k>4.7 && k<4.72))
-				{
-					k2 = pi / 2;
-					k3 = 0;
-				}
-				if ((k<=-1.56 && k>=-1.6) || (k<=-3.12 && k>=-3.16) || (k<=-4.68 && k>=-4.72) )
-				{
-					k2 = pi / 2;
-					k3 = 0;
-				}
-				if (key[KEY_RIGHT])
-				{
-					k = k + 0.02;
-					k2 = k2 - 0.02;
-					k3 = k3 + 0.02;
-				}
-					if (key[KEY_LEFT])
-				{
-					k = k -  0.02 ;
-					k2 = k2 + 0.02;
-					k3 = k3 - 0.02;
+				if (key[KEY_UP]) {
+					if (y == 1) {
+						bouncer_y = 200;
+						bouncer_2y =200;
+						y = 0;
+	                }
 					
 				}
-				if (key[KEY_UP]) {
-					if (k< 0 && k>-1.57) {
-						car_y -= 1 * k3;
-						car_x += 1 * k2;
+				if (key[KEY_DOWN]) {
+					if (y == 0) {
+						bouncer_y = 500;
+						bouncer_2y = 500;
+						y = 1;
 					}
-					if (k<=-1.57 && k>-3.14) {
-						car_y -= 1 * k2;
-						car_x -= 1 * k3;
-					}
-					if (k<=-3.14&& k>-4.71) {
-						car_y += 1 * k3;
-						car_x += 1 * k2;
-					}
-					if (k<=-4.71 && k>-6.28) {
-						car_y += 1 * k2;
-						car_x += 1 * k3;
-					}
+				}
+			}
+			if (x == 0)
+			{
+				y = 0;
+				if (key[KEY_UP] && key[KEY_LEFT]) {
+					k = k - 0.01;
+					k2 = k2 + 0.01;
+					k3 = k3 - 0.01;
+					k4 = k2 - pi / 2;
+					k5 = k3 + pi / 2;
+					y = 1;
+				}
+				else if (key[KEY_UP] && key[KEY_RIGHT]) {
 
-					if (k >= 0 && k < 1.57) {
-						car_y += 1*k3;
-						car_x += 1*k2;
+					if (k3 < 0)
+					{
+						k = 2 * pi + k;
+						k3 = k5;
+						k2 = k4;
 					}
-					if (k >= 1.57 && k < 3.14) {
-						car_y += 1*k2;
-						car_x -= 1*k3;
+					k = k + 0.01;
+					k2 = k2 - 0.01;
+					k3 = k3 + 0.01;
+					y = 1;
+				}
+				else if (key[KEY_DOWN] && key[KEY_LEFT]) {
+					k = k - 0.01;
+					k2 = k2 + 0.01;
+					k3 = k3 - 0.01;
+					k4 = k2 - pi / 2;
+					k5 = k3 + pi / 2;
+					y = 2;
+				}
+				else if (key[KEY_DOWN] && key[KEY_RIGHT]) {
+					y = 2;
+					if (k3 < 0)
+					{
+						k = 2 * pi + k;
+						k3 = k4;
+						k2 = k5;
 					}
-					if (k >= 3.14 && k < 4.71) {
-						car_y -= 1*k3;
-						car_x -= 1*k2;
-					}
-					else if (k>= 4.71 && k<6.29 )
-						car_y -= 1*k2;
-						car_x += 1*k3;
-					}
-				
-				if (key[KEY_DOWN] && car_y < 480)
-				{
+					k = k + 0.01;
+					k2 = k2 - 0.01;
+					k3 = k3 + 0.01;
+				}
+				else if (key[KEY_UP]) {
+					y = 1;
+				}
+				else if (key[KEY_DOWN]) {
+					y = 2;
+				}
+				if (y == 1) {
+					if ((car_x <= 998 || (k > 1.57 && k < 4.72) || (k<-1.57 && k>-4.72)) && (car_x >= 25 || (k < 1.57 || k > 4.72) || (k > -1.57 && k < -4.72)))
+					{
+						if ((car_y <= 589 || (k > 3.14 && k < 6.28) || (k<-3.14 && k>-6.28)) && (car_y >= 27 || (k >0 && k < 3.14) || (k <-3.14 && k > -6.28)))
+						{
+							if (k >= 0 && k < 1.57) {
+								car_y += 1 * k3;
+								car_x += 1 * k2;
+							}
+							if (k >= 1.57 && k < 3.14) {
+								car_y += 1 * k2;
+								car_x -= 1 * k3;
+							}
+							if (k >= 3.14 && k < 4.71) {
+								car_y -= 1 * k3;
+								car_x -= 1 * k2;
+							}
+							if (k >= 4.71 && k < 6.28)
+							{
+								car_y -= 1 * k2;
+								car_x += 1 * k3;
+							}
 
+							if (k <= -0.01 && k > -1.57) {
+								car_y -= 1 * k4;
+								car_x += 1 * k5;
+							}
+							if (k <= -1.57 && k > -3.14) {
+								car_y -= 1 * k5;
+								car_x -= 1 * k4;
+							}
+							if (k <= -3.14 && k > -4.71) {
+								car_y += 1 * k4;
+								car_x -= 1 * k5;
+							}
+							if (k <= -4.71 && k > -6.28) {
+								car_y += 1 * k5;
+								car_x += 1 * k4;
+							}
+						}
+					}
 				}
 
+				if (y == 2)
+				{
+					if (car_x < 999 && car_x >= 24) {
+						if (car_y<590 && car_y>=24) {
+
+							if (k >= 0 && k < 1.57) {
+								car_y -= 1 * k3;
+								car_x -= 1 * k2;
+							}
+							if (k >= 1.57 && k < 3.14) {
+								car_y -= 1 * k2;
+								car_x += 1 * k3;
+							}
+							if (k >= 3.14 && k < 4.71) {
+								car_y += 1 * k3;
+								car_x += 1 * k2;
+							}
+							if (k >= 4.71 && k < 6.28)
+							{
+								car_y += 1 * k2;
+								car_x -= 1 * k3;
+							}
+
+							if (k <= -0.01 && k > -1.57) {
+								car_y += 1 * k4;
+								car_x -= 1 * k5;
+							}
+							if (k <= -1.57 && k > -3.14) {
+								car_y += 1 * k5;
+								car_x += 1 * k4;
+							}
+							if (k <= -3.14 && k > -4.71) {
+								car_y -= 1 * k4;
+								car_x += 1 * k5;
+							}
+							if (k <= -4.71 && k > -6.28) {
+								car_y -= 1 * k5;
+								car_x -= 1 * k4;
+							}
+						}
+					}
+				}
+
+				if (k <= -6.27 || k >= 6.27)
+				{
+					k = 0;
+					k2 = pi / 2;
+					k3 = 0;
+				}
+				if ((k > 1.56 && k < 1.58) || (k > 3.13 && k < 3.15) || (k > 4.7 && k < 4.72))
+				{
+					k2 = pi / 2;
+					k3 = 0;
+				}
+				if ((k < -1.56 && k > -1.58) || (k < -3.13 && k > -3.15) || (k < -4.7 && k > -4.72))
+				{
+					k2 = pi / 2;
+					k3 = 0;
+				}
 			}
 			redraw = true;
 		}
@@ -272,7 +350,7 @@ int main(int argc, char **argv)
 				key[KEY_RIGHT] = false;
 				break;
 			case ALLEGRO_KEY_ENTER:
-				if (bouncer_y > 180)
+				if (y==1)
 					doexit = true;
 				else
 				{
@@ -290,8 +368,8 @@ int main(int argc, char **argv)
 				al_clear_to_color(al_map_rgb(0, 0, 0));
 
 
-				al_draw_bitmap(image, 200, 60, 0);
-				al_draw_bitmap(image3, 200, 300, 0);
+				al_draw_bitmap(image, 400, 200, 0);
+				al_draw_bitmap(image3, 400, 500, 0);
 				al_draw_bitmap(bouncer, bouncer_x, bouncer_y, 0);
 				al_draw_bitmap(bouncer2, bouncer_2x, bouncer_2y, 0);
 				al_flip_display();
