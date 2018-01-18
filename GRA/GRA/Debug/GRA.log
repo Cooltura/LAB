@@ -1,2 +1,4 @@
 ﻿  Źródło.c
+c:\users\radzio\documents\github\lab\gra\gra\źródło.c(217): warning C4101: "time": lokalna zmienna, do której nie istnieje odwołanie
+c:\users\radzio\documents\github\lab\gra\gra\źródło.c(240): warning C4101: "j": lokalna zmienna, do której nie istnieje odwołanie
   GRA.vcxproj -> C:\Users\Radzio\Documents\GitHub\LAB\GRA\Debug\GRA.exe
